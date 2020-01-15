@@ -80,10 +80,12 @@ function getSecrets(secrets) {
 
 function getValueFiles(files) {
   let fileList;
+  console.log("getValueFiles param: ", files);
   if (typeof files === "string") {
     try {
       fileList = JSON.parse(files);
     } catch (err) {
+      console.log(err);
       // Assume it's a single string.
       fileList = [files];
     }
