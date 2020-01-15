@@ -17,8 +17,7 @@ RUN apk add --no-cache ca-certificates jq curl bash nodejs && \
 #    chmod +x /usr/bin/helm3 && \
 #    rm -rf linux-amd64 && \
     # Init version 2 helm:
-    helm init --client-only && \
-    helm version
+    helm init --client-only
 
 COPY . /usr/src/
 ENTRYPOINT ["node", "/usr/src/index.js"]
