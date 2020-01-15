@@ -225,6 +225,9 @@ async function run() {
       await writeFile(opts.env.KUBECONFIG, process.env.KUBECONFIG_FILE);
     }
     await writeFile("./values.yml", values);
+    console.log('values:');
+    console.log(values);
+    console.log('end of values.');
 
     core.debug(`env: KUBECONFIG="${opts.env.KUBECONFIG}"`);
 
