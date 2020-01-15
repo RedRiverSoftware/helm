@@ -80,12 +80,10 @@ function getSecrets(secrets) {
 
 function getValueFiles(files) {
   let fileList;
-  console.log("getValueFiles param: ", files);
   if (typeof files === "string") {
     try {
       fileList = JSON.parse(files);
     } catch (err) {
-      console.log(err);
       // Assume it's a single string.
       fileList = [files];
     }
@@ -266,7 +264,10 @@ async function run() {
       
       console.log('adding repo...')
       await exec.exec(helm, repoAddArgs, opts);
-      console.log('repo added')
+      
+      console.log('updating repos...');
+      const repoUpdateArgs = [ "repo", "update", "--home=/etc/.helm" ];
+      await exec.exec(helm, repoUpdateArgs, opts);
     }
 
     // Actually execute the deployment here.
