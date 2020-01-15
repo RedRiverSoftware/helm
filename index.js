@@ -260,11 +260,10 @@ async function run() {
 
       if (repoUsername) repoAddArgs.push(`--username=${repoUsername}`);
       if (repoPassword) repoAddArgs.push(`--password=${repoPassword}`);
-
-      repoAddArgs.push(";");
-      repoAddArgs.push(helm);
       
-      args = repoAddArgs.concat(args)
+      console.log('adding repo...')
+      await exec.exec(helm, repoAddArgs, opts);
+      console.log('repo added')
     }
 
     // Actually execute the deployment here.
