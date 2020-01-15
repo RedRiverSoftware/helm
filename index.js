@@ -201,8 +201,8 @@ async function run() {
       chart,
       "--home=/etc/.helm",
       "--install",
-      #"--wait",
-      #"--atomic",
+      //"--wait",
+      //"--atomic",
       `--namespace=${namespace}`,
     ];
     if (dryRun) args.push("--dry-run");
