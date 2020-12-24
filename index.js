@@ -35,8 +35,8 @@ async function status(state) {
       log_url: url,
       target_url: url,
       headers: {
-        accept: 'application/vnd.github.ant-man-preview+json'
-      }
+        accept: "application/vnd.github.ant-man-preview+json",
+      },
     });
   } catch (error) {
     core.warning(`Failed to set deployment status: ${error.message}`);
@@ -93,7 +93,7 @@ function getValueFiles(files) {
   if (!Array.isArray(fileList)) {
     return [];
   }
-  return fileList.filter(f => !!f);
+  return fileList.filter((f) => !!f);
 }
 
 function getInput(name, options) {
@@ -101,7 +101,7 @@ function getInput(name, options) {
   const deployment = context.payload.deployment;
   let val = core.getInput(name.replace("_", "-"), {
     ...options,
-    required: false
+    required: false,
   });
   if (deployment) {
     if (deployment[name]) val = deployment[name];
@@ -123,7 +123,7 @@ function renderFiles(files, data) {
     `rendering value files [${files.join(",")}] with: ${JSON.stringify(data)}`
   );
   const tags = ["${{", "}}"];
-  const promises = files.map(async file => {
+  const promises = files.map(async (file) => {
     const content = await readFile(file, { encoding: "utf8" });
     const rendered = Mustache.render(content, data, {}, tags);
     await writeFile(file, rendered);
@@ -171,6 +171,7 @@ async function run() {
     const repoPassword = getInput("repo-password");
 
     const dryRun = core.getInput("dry-run");
+    const force = core.getInput("force");
     const secrets = getSecrets(core.getInput("secrets"));
 
     core.debug(`param: track = "${track}"`);
@@ -180,6 +181,7 @@ async function run() {
     core.debug(`param: chart = "${chart}"`);
     core.debug(`param: values = "${values}"`);
     core.debug(`param: dryRun = "${dryRun}"`);
+    core.debug(`param: force = "${force}"`);
     core.debug(`param: task = "${task}"`);
     core.debug(`param: version = "${version}"`);
     core.debug(`param: secrets = "${JSON.stringify(secrets)}"`);
@@ -192,9 +194,11 @@ async function run() {
     core.debug(`param: repoPassword = "${repoPassword}"`);
 
     // Setup command options and arguments.
-    const opts = { env: {
-      KUBECONFIG: process.env.KUBECONFIG,
-    }};
+    const opts = {
+      env: {
+        KUBECONFIG: process.env.KUBECONFIG,
+      },
+    };
     let args = [
       "upgrade",
       release,
@@ -206,10 +210,11 @@ async function run() {
       `--namespace=${namespace}`,
     ];
     if (dryRun) args.push("--dry-run");
+    if (force) args.push("--force");
     if (appName) args.push(`--set=app.name=${appName}`);
     if (version) args.push(`--set=app.version=${version}`);
     if (timeout) args.push(`--timeout=${timeout}`);
-    valueFiles.forEach(f => args.push(`--values=${f}`));
+    valueFiles.forEach((f) => args.push(`--values=${f}`));
     args.push("--values=./values.yml");
 
     // Special behaviour is triggered if the track is labelled 'canary'. The
@@ -225,9 +230,9 @@ async function run() {
       await writeFile(opts.env.KUBECONFIG, process.env.KUBECONFIG_FILE);
     }
     await writeFile("./values.yml", values);
-    console.log('values:');
+    console.log("values:");
     console.log(values);
-    console.log('end of values.');
+    console.log("end of values.");
 
     core.debug(`env: KUBECONFIG="${opts.env.KUBECONFIG}"`);
 
@@ -242,34 +247,31 @@ async function run() {
       core.debug(`removing canary ${appName}-canary`);
       await exec.exec(helm, deleteCmd(helm, namespace, `${appName}-canary`), {
         ...opts,
-        ignoreReturnCode: true
+        ignoreReturnCode: true,
       });
     }
 
     if (repo !== "") {
       if (repoAlias === "") {
-        core.setFailed("repo alias is required when you are setting a repository");
+        core.setFailed(
+          "repo alias is required when you are setting a repository"
+        );
         await status("failure");
       }
 
       core.debug(`adding custom repository ${repo} with alias ${repoAlias}`);
-      const repoAddArgs = [
-        "repo",
-        "add",
-        repoAlias,
-        repo,
-      ]
+      const repoAddArgs = ["repo", "add", repoAlias, repo];
 
       if (repoUsername) repoAddArgs.push(`--username=${repoUsername}`);
       if (repoPassword) repoAddArgs.push(`--password=${repoPassword}`);
-      
+
       repoAddArgs.push("--home=/etc/.helm");
-      
-      console.log('adding repo...')
+
+      console.log("adding repo...");
       await exec.exec(helm, repoAddArgs, opts);
-      
-      console.log('updating repos...');
-      const repoUpdateArgs = [ "repo", "update", "--home=/etc/.helm" ];
+
+      console.log("updating repos...");
+      const repoUpdateArgs = ["repo", "update", "--home=/etc/.helm"];
       await exec.exec(helm, repoUpdateArgs, opts);
     }
 
@@ -277,7 +279,7 @@ async function run() {
     if (task === "remove") {
       await exec.exec(helm, deleteCmd(helm, namespace, release), {
         ...opts,
-        ignoreReturnCode: true
+        ignoreReturnCode: true,
       });
     } else {
       await exec.exec(helm, args, opts);
