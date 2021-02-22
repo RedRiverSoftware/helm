@@ -173,6 +173,7 @@ async function run() {
     const debug = core.getInput("debug");
     const replace = core.getInput("replace");
     const dryRun = core.getInput("dry-run");
+    const noHooks = core.getInput("no-hooks");
     const force = core.getInput("force");
     const secrets = getSecrets(core.getInput("secrets"));
 
@@ -185,6 +186,7 @@ async function run() {
     core.debug(`param: debug = "${debug}"`);
     core.debug(`param: replace = "${replace}"`);
     core.debug(`param: dryRun = "${dryRun}"`);
+    core.debug(`param: noHooks = "${noHooks}"`);
     core.debug(`param: force = "${force}"`);
     core.debug(`param: task = "${task}"`);
     core.debug(`param: version = "${version}"`);
@@ -216,6 +218,7 @@ async function run() {
     if (debug) args.push("--debug");
     if (replace) args.push("--replace");
     if (dryRun) args.push("--dry-run");
+    if (noHooks) args.push("--no-hooks");
     if (force) args.push("--force");
     if (appName) args.push(`--set=app.name=${appName}`);
     if (version) args.push(`--set=app.version=${version}`);
