@@ -170,6 +170,7 @@ async function run() {
     const repoUsername = getInput("repo-username");
     const repoPassword = getInput("repo-password");
 
+    const debug = getInput("debug");
     const dryRun = core.getInput("dry-run");
     const force = core.getInput("force");
     const secrets = getSecrets(core.getInput("secrets"));
@@ -180,6 +181,7 @@ async function run() {
     core.debug(`param: namespace = "${namespace}"`);
     core.debug(`param: chart = "${chart}"`);
     core.debug(`param: values = "${values}"`);
+    core.debug(`param: debug = "${debug}"`);
     core.debug(`param: dryRun = "${dryRun}"`);
     core.debug(`param: force = "${force}"`);
     core.debug(`param: task = "${task}"`);
@@ -209,6 +211,7 @@ async function run() {
       //"--atomic",
       `--namespace=${namespace}`,
     ];
+    if (debug) args.push("--debug");
     if (dryRun) args.push("--dry-run");
     if (force) args.push("--force");
     if (appName) args.push(`--set=app.name=${appName}`);
