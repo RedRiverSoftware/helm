@@ -206,11 +206,11 @@ async function run() {
       },
     };
     let args = [
-      "upgrade",
+      replace ? "install" : "upgrade",
       release,
       chart,
       "--home=/etc/.helm",
-      "--install",
+      replace ? "--replace" : "--install",
       //"--wait",
       //"--atomic",
       `--namespace=${namespace}`,
