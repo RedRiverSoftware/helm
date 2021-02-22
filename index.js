@@ -170,7 +170,7 @@ async function run() {
     const repoUsername = getInput("repo-username");
     const repoPassword = getInput("repo-password");
 
-    const debug = getInput("debug");
+    const debug = core.getInput("debug");
     const dryRun = core.getInput("dry-run");
     const force = core.getInput("force");
     const secrets = getSecrets(core.getInput("secrets"));
