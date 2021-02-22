@@ -171,6 +171,7 @@ async function run() {
     const repoPassword = getInput("repo-password");
 
     const debug = core.getInput("debug");
+    const replace = core.getInput("replace");
     const dryRun = core.getInput("dry-run");
     const force = core.getInput("force");
     const secrets = getSecrets(core.getInput("secrets"));
@@ -182,6 +183,7 @@ async function run() {
     core.debug(`param: chart = "${chart}"`);
     core.debug(`param: values = "${values}"`);
     core.debug(`param: debug = "${debug}"`);
+    core.debug(`param: replace = "${replace}"`);
     core.debug(`param: dryRun = "${dryRun}"`);
     core.debug(`param: force = "${force}"`);
     core.debug(`param: task = "${task}"`);
@@ -212,6 +214,7 @@ async function run() {
       `--namespace=${namespace}`,
     ];
     if (debug) args.push("--debug");
+    if (replace) args.push("--replace");
     if (dryRun) args.push("--dry-run");
     if (force) args.push("--force");
     if (appName) args.push(`--set=app.name=${appName}`);
