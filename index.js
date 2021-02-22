@@ -216,7 +216,7 @@ async function run() {
       //"--atomic",
       `--namespace=${namespace}`,
     ] : [
-      "upgrade"
+      "upgrade",
       release,
       chart,
       "--home=/etc/.helm",
