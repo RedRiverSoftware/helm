@@ -205,12 +205,22 @@ async function run() {
         KUBECONFIG: process.env.KUBECONFIG,
       },
     };
-    let args = [
-      replace ? "install" : "upgrade",
+    let args = replace? [
+      "install",
+      chart,
+      "-n",
+      release,
+      "--home=/etc/.helm",
+      "--replace",
+      //"--wait",
+      //"--atomic",
+      `--namespace=${namespace}`,
+    ] : [
+      "upgrade"
       release,
       chart,
       "--home=/etc/.helm",
-      replace ? "--replace" : "--install",
+      "--install",
       //"--wait",
       //"--atomic",
       `--namespace=${namespace}`,
